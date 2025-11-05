@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  API_BASE_URL: 'https://localhost:7288'
+  API_BASE_URL: 'https://fifo-backend.azurewebsites.net/'
 };
 
 

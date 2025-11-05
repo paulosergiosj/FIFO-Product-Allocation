@@ -12,10 +12,10 @@
                         <div class="mb-3">
                             <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
                             <input type="text" class="form-control"
-                                [class.is-invalid]="receiptFormRef.controls['sku']?.invalid && receiptFormRef.controls['sku']?.touched"
+                                [class.is-invalid]="receiptFormRef.controls['sku'].invalid && receiptFormRef.controls['sku'].touched"
                                 id="sku" [(ngModel)]="receiptForm.sku" name="sku" maxlength="50" required>
                             <div class="invalid-feedback"
-                                *ngIf="receiptFormRef.controls['sku']?.invalid && receiptFormRef.controls['sku']?.touched">
+                                *ngIf="receiptFormRef.controls['sku'].invalid && receiptFormRef.controls['sku'].touched">
                                 SKU is required.
                             </div>
                         </div>
@@ -23,11 +23,11 @@
                             <label for="quantityReceived" class="form-label">Quantity Received <span
                                     class="text-danger">*</span></label>
                             <input type="number" class="form-control"
-                                [class.is-invalid]="receiptFormRef.controls['quantityReceived']?.invalid && receiptFormRef.controls['quantityReceived']?.touched"
+                                [class.is-invalid]="receiptFormRef.controls['quantityReceived'].invalid && receiptFormRef.controls['quantityReceived'].touched"
                                 id="quantityReceived" [(ngModel)]="receiptForm.quantityReceived" name="quantityReceived"
                                 min="1" required>
                             <div class="invalid-feedback"
-                                *ngIf="receiptFormRef.controls['quantityReceived']?.invalid && receiptFormRef.controls['quantityReceived']?.touched">
+                                *ngIf="receiptFormRef.controls['quantityReceived'].invalid && receiptFormRef.controls['quantityReceived'].touched">
                                 Quantity Received must be greater than zero.
                             </div>
                         </div>
@@ -35,11 +35,11 @@
                             <label for="unitCost" class="form-label">Unit Cost <span
                                     class="text-danger">*</span></label>
                             <input type="number" class="form-control"
-                                [class.is-invalid]="receiptFormRef.controls['unitCost']?.invalid && receiptFormRef.controls['unitCost']?.touched"
+                                [class.is-invalid]="receiptFormRef.controls['unitCost'].invalid && receiptFormRef.controls['unitCost'].touched"
                                 id="unitCost" [(ngModel)]="receiptForm.unitCost" name="unitCost" step="0.01" min="0.01"
                                 required>
                             <div class="invalid-feedback"
-                                *ngIf="receiptFormRef.controls['unitCost']?.invalid && receiptFormRef.controls['unitCost']?.touched">
+                                *ngIf="receiptFormRef.controls['unitCost'].invalid && receiptFormRef.controls['unitCost'].touched">
                                 Unit Cost must be greater than zero.
                             </div>
                         </div>
@@ -47,11 +47,11 @@
                             <label for="receivedAtUtc" class="form-label">Received At (UTC) <span
                                     class="text-danger">*</span></label>
                             <input type="date" class="form-control"
-                                [class.is-invalid]="receiptFormRef.controls['receivedAtUtc']?.invalid && receiptFormRef.controls['receivedAtUtc']?.touched"
+                                [class.is-invalid]="receiptFormRef.controls['receivedAtUtc'].invalid && receiptFormRef.controls['receivedAtUtc'].touched"
                                 id="receivedAtUtc" [(ngModel)]="receiptForm.receivedAtUtc" name="receivedAtUtc"
                                 placeholder="MM/DD/YYYY" required>
                             <div class="invalid-feedback"
-                                *ngIf="receiptFormRef.controls['receivedAtUtc']?.invalid && receiptFormRef.controls['receivedAtUtc']?.touched">
+                                *ngIf="receiptFormRef.controls['receivedAtUtc'].invalid && receiptFormRef.controls['receivedAtUtc'].touched">
                                 Received date is required.
                             </div>
                         </div>
@@ -59,10 +59,10 @@
                             <label for="warehouseId" class="form-label">Warehouse ID <span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control"
-                                [class.is-invalid]="receiptFormRef.controls['warehouseId']?.invalid && receiptFormRef.controls['warehouseId']?.touched"
+                                [class.is-invalid]="receiptFormRef.controls['warehouseId'].invalid && receiptFormRef.controls['warehouseId'].touched"
                                 id="warehouseId" [(ngModel)]="receiptForm.warehouseId" name="warehouseId" maxlength="50" required>
                             <div class="invalid-feedback"
-                                *ngIf="receiptFormRef.controls['warehouseId']?.invalid && receiptFormRef.controls['warehouseId']?.touched">
+                                *ngIf="receiptFormRef.controls['warehouseId'].invalid && receiptFormRef.controls['warehouseId'].touched">
                                 Warehouse ID is required.
                             </div>
                         </div>
@@ -83,10 +83,10 @@
                         <div class="mb-3">
                             <label for="orderId" class="form-label">Order ID <span class="text-danger">*</span></label>
                             <input type="text" class="form-control"
-                                [class.is-invalid]="orderFormRef.controls['orderId']?.invalid && orderFormRef.controls['orderId']?.touched"
+                                [class.is-invalid]="orderFormRef.controls['orderId'].invalid && orderFormRef.controls['orderId'].touched"
                                 id="orderId" [(ngModel)]="orderForm.orderId" name="orderId" maxlength="50" required>
                             <div class="invalid-feedback"
-                                *ngIf="orderFormRef.controls['orderId']?.invalid && orderFormRef.controls['orderId']?.touched">
+                                *ngIf="orderFormRef.controls['orderId'].invalid && orderFormRef.controls['orderId'].touched">
                                 Order ID is required.
                             </div>
                         </div>
@@ -103,31 +103,31 @@
                                 <div class="mb-2">
                                     <label class="form-label">SKU <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control"
-                                        [class.is-invalid]="orderFormRef.controls['sku' + i]?.invalid && orderFormRef.controls['sku' + i]?.touched"
+                                        [class.is-invalid]="orderFormRef.controls['sku' + i].invalid && orderFormRef.controls['sku' + i].touched"
                                         [(ngModel)]="line.sku" [name]="'sku' + i" maxlength="50" required>
                                     <div class="invalid-feedback"
-                                        *ngIf="orderFormRef.controls['sku' + i]?.invalid && orderFormRef.controls['sku' + i]?.touched">
+                                        *ngIf="orderFormRef.controls['sku' + i].invalid && orderFormRef.controls['sku' + i].touched">
                                         SKU is required.
                                     </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Quantity <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control"
-                                        [class.is-invalid]="orderFormRef.controls['quantity' + i]?.invalid && orderFormRef.controls['quantity' + i]?.touched"
+                                        [class.is-invalid]="orderFormRef.controls['quantity' + i].invalid && orderFormRef.controls['quantity' + i].touched"
                                         [(ngModel)]="line.quantity" [name]="'quantity' + i" min="1" required>
                                     <div class="invalid-feedback"
-                                        *ngIf="orderFormRef.controls['quantity' + i]?.invalid && orderFormRef.controls['quantity' + i]?.touched">
+                                        *ngIf="orderFormRef.controls['quantity' + i].invalid && orderFormRef.controls['quantity' + i].touched">
                                         Quantity must be greater than zero.
                                     </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Unit Price <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control"
-                                        [class.is-invalid]="orderFormRef.controls['unitPrice' + i]?.invalid && orderFormRef.controls['unitPrice' + i]?.touched"
+                                        [class.is-invalid]="orderFormRef.controls['unitPrice' + i].invalid && orderFormRef.controls['unitPrice' + i].touched"
                                         [(ngModel)]="line.unitPrice" [name]="'unitPrice' + i" step="0.01" min="0"
                                         required>
                                     <div class="invalid-feedback"
-                                        *ngIf="orderFormRef.controls['unitPrice' + i]?.invalid && orderFormRef.controls['unitPrice' + i]?.touched">
+                                        *ngIf="orderFormRef.controls['unitPrice' + i].invalid && orderFormRef.controls['unitPrice' + i].touched">
                                         Unit Price is required and must be greater than or equal to zero.
                                     </div>
                                 </div>
