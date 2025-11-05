@@ -1,0 +1,55 @@
+##########################
+# .NET (backend)
+##########################
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vs/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.pdb
+
+# Publicações e builds
+/publish/
+/out/
+/build/
+/backend/bin/
+/backend/obj/
+/backend/Properties/launchSettings.json
+
+##########################
+# Angular (frontend)
+##########################
+/frontend/node_modules/
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/.angular/cache
+/frontend/.angular/
+/frontend/.env
+/frontend/.env.*.local
+/frontend/package-lock.json
+/frontend/yarn.lock
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+##########################
+# IDEs e SO
+##########################
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+##########################
+# Logs e backups
+##########################
+*.log
+*.bak
+*.swp

@@ -1,0 +1,252 @@
+<div class="container mt-4">
+    <h1 class="mb-4">FIFO Product Allocation</h1>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Add Inventory Receipt</h5>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="onReceiptSubmit(receiptFormRef)" #receiptFormRef="ngForm">
+                        <div class="mb-3">
+                            <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="receiptFormRef.controls['sku']?.invalid && receiptFormRef.controls['sku']?.touched"
+                                id="sku" [(ngModel)]="receiptForm.sku" name="sku" maxlength="50" required>
+                            <div class="invalid-feedback"
+                                *ngIf="receiptFormRef.controls['sku']?.invalid && receiptFormRef.controls['sku']?.touched">
+                                SKU is required.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantityReceived" class="form-label">Quantity Received <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" class="form-control"
+                                [class.is-invalid]="receiptFormRef.controls['quantityReceived']?.invalid && receiptFormRef.controls['quantityReceived']?.touched"
+                                id="quantityReceived" [(ngModel)]="receiptForm.quantityReceived" name="quantityReceived"
+                                min="1" required>
+                            <div class="invalid-feedback"
+                                *ngIf="receiptFormRef.controls['quantityReceived']?.invalid && receiptFormRef.controls['quantityReceived']?.touched">
+                                Quantity Received must be greater than zero.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="unitCost" class="form-label">Unit Cost <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" class="form-control"
+                                [class.is-invalid]="receiptFormRef.controls['unitCost']?.invalid && receiptFormRef.controls['unitCost']?.touched"
+                                id="unitCost" [(ngModel)]="receiptForm.unitCost" name="unitCost" step="0.01" min="0.01"
+                                required>
+                            <div class="invalid-feedback"
+                                *ngIf="receiptFormRef.controls['unitCost']?.invalid && receiptFormRef.controls['unitCost']?.touched">
+                                Unit Cost must be greater than zero.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="receivedAtUtc" class="form-label">Received At (UTC) <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control"
+                                [class.is-invalid]="receiptFormRef.controls['receivedAtUtc']?.invalid && receiptFormRef.controls['receivedAtUtc']?.touched"
+                                id="receivedAtUtc" [(ngModel)]="receiptForm.receivedAtUtc" name="receivedAtUtc"
+                                placeholder="MM/DD/YYYY" required>
+                            <div class="invalid-feedback"
+                                *ngIf="receiptFormRef.controls['receivedAtUtc']?.invalid && receiptFormRef.controls['receivedAtUtc']?.touched">
+                                Received date is required.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="warehouseId" class="form-label">Warehouse ID <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="receiptFormRef.controls['warehouseId']?.invalid && receiptFormRef.controls['warehouseId']?.touched"
+                                id="warehouseId" [(ngModel)]="receiptForm.warehouseId" name="warehouseId" maxlength="50" required>
+                            <div class="invalid-feedback"
+                                *ngIf="receiptFormRef.controls['warehouseId']?.invalid && receiptFormRef.controls['warehouseId']?.touched">
+                                Warehouse ID is required.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" [disabled]="receiptFormRef.invalid">Add
+                            Receipt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Add Order</h5>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="onOrderSubmit(orderFormRef)" #orderFormRef="ngForm">
+                        <div class="mb-3">
+                            <label for="orderId" class="form-label">Order ID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="orderFormRef.controls['orderId']?.invalid && orderFormRef.controls['orderId']?.touched"
+                                id="orderId" [(ngModel)]="orderForm.orderId" name="orderId" maxlength="50" required>
+                            <div class="invalid-feedback"
+                                *ngIf="orderFormRef.controls['orderId']?.invalid && orderFormRef.controls['orderId']?.touched">
+                                Order ID is required.
+                            </div>
+                        </div>
+                        <div id="orderLines">
+                            <div class="order-line mb-3 p-3 border rounded"
+                                *ngFor="let line of orderForm.lines; let i = index">
+                                <div class="d-flex justify-content-between align-items-center mb-2"
+                                    *ngIf="orderForm.lines.length > 1">
+                                    <h6>Order Line {{ i + 1 }}</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        (click)="removeOrderLine(i)">Remove</button>
+                                </div>
+                                <h6 *ngIf="orderForm.lines.length === 1">Order Line 1</h6>
+                                <div class="mb-2">
+                                    <label class="form-label">SKU <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"
+                                        [class.is-invalid]="orderFormRef.controls['sku' + i]?.invalid && orderFormRef.controls['sku' + i]?.touched"
+                                        [(ngModel)]="line.sku" [name]="'sku' + i" maxlength="50" required>
+                                    <div class="invalid-feedback"
+                                        *ngIf="orderFormRef.controls['sku' + i]?.invalid && orderFormRef.controls['sku' + i]?.touched">
+                                        SKU is required.
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control"
+                                        [class.is-invalid]="orderFormRef.controls['quantity' + i]?.invalid && orderFormRef.controls['quantity' + i]?.touched"
+                                        [(ngModel)]="line.quantity" [name]="'quantity' + i" min="1" required>
+                                    <div class="invalid-feedback"
+                                        *ngIf="orderFormRef.controls['quantity' + i]?.invalid && orderFormRef.controls['quantity' + i]?.touched">
+                                        Quantity must be greater than zero.
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Unit Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control"
+                                        [class.is-invalid]="orderFormRef.controls['unitPrice' + i]?.invalid && orderFormRef.controls['unitPrice' + i]?.touched"
+                                        [(ngModel)]="line.unitPrice" [name]="'unitPrice' + i" step="0.01" min="0"
+                                        required>
+                                    <div class="invalid-feedback"
+                                        *ngIf="orderFormRef.controls['unitPrice' + i]?.invalid && orderFormRef.controls['unitPrice' + i]?.touched">
+                                        Unit Price is required and must be greater than or equal to zero.
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Preferred Warehouse ID (optional)</label>
+                                    <input type="text" class="form-control" [(ngModel)]="line.preferredWarehouseId"
+                                        [name]="'warehouse' + i" maxlength="50">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" style="margin-right:10px;"
+                            (click)="addOrderLine()">Add Line</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="orderFormRef.invalid">Allocate
+                            Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <button type="button" class="btn btn-danger" (click)="clearAll()">Clear All Data</button>
+        </div>
+    </div>
+
+    <div id="receiptResults" class="mb-4" *ngIf="getSortedSkus().length > 0">
+        <div class="card">
+            <div class="card-header">
+                <h5>Inventory by SKU</h5>
+            </div>
+            <div class="card-body">
+                <div *ngFor="let sku of getSortedSkus()">
+                    <h6 class="mt-3 mb-2">SKU: {{ sku }}</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Quantity Received</th>
+                                    <th>Quantity Used</th>
+                                    <th>Quantity Available</th>
+                                    <th>Unit Cost</th>
+                                    <th>Received At (UTC)</th>
+                                    <th>Warehouse ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let receipt of groupedReceipts[sku]">
+                                    <td>{{ receipt.quantityReceived || 0 }}</td>
+                                    <td>{{ receipt.quantityUsed || 0 }}</td>
+                                    <td>{{ receipt.quantityAvailable || (receipt.quantityReceived || 0) -
+                                        (receipt.quantityUsed || 0) }}</td>
+                                    <td>${{ formatCurrency(receipt.unitCost) }}</td>
+                                    <td>{{ formatDateUS(receipt.receivedAtUtc) }}</td>
+                                    <td>{{ receipt.warehouseId || '' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorMessage" class="alert alert-danger" *ngIf="errorMessage" (click)="errorMessage = ''"
+        style="cursor: pointer;">
+        {{ errorMessage }}
+    </div>
+</div>
+
+<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" *ngIf="showModal"
+    tabindex="-1" role="dialog" aria-labelledby="orderResultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderResultsModalLabel">Order Allocation Results</h5>
+                <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" *ngIf="orderResult">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>Order ID:</strong> {{ orderResult.orderId }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>COGS:</strong> ${{ formatCurrency(orderResult.cogs) }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Revenue:</strong> ${{ formatCurrency(orderResult.revenue) }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Margin:</strong> ${{ formatCurrency(orderResult.margin) }}
+                    </div>
+                </div>
+                <div *ngIf="orderResult.details && orderResult.details.length > 0">
+                    <h6 class="mt-3">Allocation Details</h6>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Allocated Quantity</th>
+                                <th>Warehouse ID</th>
+                                <th>Unit Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detail of orderResult.details">
+                                <td>{{ detail.sku || '' }}</td>
+                                <td>{{ detail.allocatedQty || 0 }}</td>
+                                <td>{{ detail.warehouseId || '' }}</td>
+                                <td>${{ formatCurrency(detail.unitCost) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showModal" *ngIf="showModal" (click)="closeModal()"></div>
