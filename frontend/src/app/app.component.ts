@@ -300,6 +300,48 @@ export class AppComponent implements OnInit {
     }
   }
 
+  limitIntegerLength(event: any, maxLength: number): void {
+    const input = event.target;
+    let value = input.value;
+    
+    if (value === '' || value === null || value === undefined) {
+      if (input.id === 'quantityReceived') {
+        this.receiptForm.quantityReceived = 0;
+      } else if (input.name && input.name.startsWith('quantity')) {
+        const match = input.name.match(/quantity(\d+)/);
+        if (match) {
+          const index = parseInt(match[1]);
+          if (this.orderForm.lines[index]) {
+            this.orderForm.lines[index].quantity = 0;
+          }
+        }
+      }
+      return;
+    }
+    
+    let valueStr = value.toString().replace(/[^\d]/g, '');
+    
+    if (valueStr.length > maxLength) {
+      valueStr = valueStr.substring(0, maxLength);
+    }
+    
+    input.value = valueStr;
+    
+    const numValue = valueStr === '' ? 0 : parseInt(valueStr, 10);
+    
+    if (input.id === 'quantityReceived') {
+      this.receiptForm.quantityReceived = numValue;
+    } else if (input.name && input.name.startsWith('quantity')) {
+      const match = input.name.match(/quantity(\d+)/);
+      if (match) {
+        const index = parseInt(match[1]);
+        if (this.orderForm.lines[index]) {
+          this.orderForm.lines[index].quantity = numValue;
+        }
+      }
+    }
+  }
+
   isControlInvalid(form: any, controlName: string): boolean {
     const control = form.controls[controlName];
     return control && control.invalid && (control.dirty || control.touched);
