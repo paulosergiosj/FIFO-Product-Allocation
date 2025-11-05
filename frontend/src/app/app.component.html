@@ -25,7 +25,7 @@
                             <input type="number" class="form-control"
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'quantityReceived')"
                                 id="quantityReceived" [(ngModel)]="receiptForm.quantityReceived" name="quantityReceived"
-                                min="1" required>
+                                min="1" max="2147483647" (input)="limitNumberLength($event, 10)" required>
                             <div class="invalid-feedback"
                                 *ngIf="isControlInvalid(receiptFormRef, 'quantityReceived')">
                                 Quantity Received must be greater than zero.
@@ -37,7 +37,7 @@
                             <input type="number" class="form-control"
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'unitCost')"
                                 id="unitCost" [(ngModel)]="receiptForm.unitCost" name="unitCost" step="0.01" min="0.01"
-                                required>
+                                max="999999999.99" (input)="limitNumberLength($event, 15)" required>
                             <div class="invalid-feedback"
                                 *ngIf="isControlInvalid(receiptFormRef, 'unitCost')">
                                 Unit Cost must be greater than zero.
@@ -117,7 +117,8 @@
                                     <label class="form-label">Quantity <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control"
                                         [class.is-invalid]="isControlInvalid(orderFormRef, 'quantity' + i)"
-                                        [(ngModel)]="line.quantity" [name]="'quantity' + i" min="1" required>
+                                        [(ngModel)]="line.quantity" [name]="'quantity' + i" min="1" max="2147483647"
+                                        (input)="limitNumberLength($event, 10)" required>
                                     <div class="invalid-feedback"
                                         *ngIf="isControlInvalid(orderFormRef, 'quantity' + i)">
                                         Quantity must be greater than zero.
@@ -128,7 +129,7 @@
                                     <input type="number" class="form-control"
                                         [class.is-invalid]="isControlInvalid(orderFormRef, 'unitPrice' + i)"
                                         [(ngModel)]="line.unitPrice" [name]="'unitPrice' + i" step="0.01" min="0"
-                                        required>
+                                        max="999999999.99" (input)="limitNumberLength($event, 15)" required>
                                     <div class="invalid-feedback"
                                         *ngIf="isControlInvalid(orderFormRef, 'unitPrice' + i)">
                                         Unit Price is required and must be greater than or equal to zero.

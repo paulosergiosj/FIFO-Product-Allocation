@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { InventoryReceipt, InventoryReceiptRequest } from '../models/inventory-receipt.model';
 import { OrderRequest, OrderLine, AllocationResult } from '../models/order.model';
@@ -65,24 +65,7 @@ export class AppComponent implements OnInit {
     return Object.keys(this.groupedReceipts).sort();
   }
 
-  isControlInvalid(form: NgForm | null, controlName: string): boolean {
-    if (!form || !form.controls || !form.controls[controlName]) {
-      return false;
-    }
-    const control = form.controls[controlName];
-    return control.invalid && control.touched;
-  }
-
   onReceiptSubmit(form: any): void {
-    if (this.receiptForm.receivedAtUtc) {
-      const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      if (!dateRegex.test(this.receiptForm.receivedAtUtc)) {
-        this.errorMessage = 'Please enter a valid date in MM/DD/YYYY format.';
-        form.controls['receivedAtUtc']?.markAsTouched();
-        return;
-      }
-    }
-
     if (form.invalid) {
       Object.keys(form.controls).forEach(key => {
         form.controls[key].markAsTouched();
@@ -186,14 +169,11 @@ export class AppComponent implements OnInit {
 
   formatDateInput(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
-    console.log('testtt');
     
-    // Limita a 8 dígitos (MMDDYYYY)
     if (value.length > 8) {
       value = value.substring(0, 8);
     }
     
-    // Adiciona barras automaticamente
     let formatted = value;
     if (value.length >= 3) {
       formatted = value.substring(0, 2) + '/' + value.substring(2);
@@ -213,7 +193,6 @@ export class AppComponent implements OnInit {
     const match = dateString.match(dateRegex);
     
     if (!match) {
-      // Se não está no formato correto mas tem conteúdo, limpa
       if (dateString.length === 10) {
         this.receiptForm.receivedAtUtc = '';
       }
@@ -224,26 +203,22 @@ export class AppComponent implements OnInit {
     const day = parseInt(match[2], 10);
     const year = parseInt(match[3], 10);
     
-    // Valida mês
     if (month < 1 || month > 12) {
       this.receiptForm.receivedAtUtc = '';
       return;
     }
     
-    // Valida dia
     const daysInMonth = new Date(year, month, 0).getDate();
     if (day < 1 || day > daysInMonth) {
       this.receiptForm.receivedAtUtc = '';
       return;
     }
     
-    // Valida ano
     if (year < 1900 || year > 2100) {
       this.receiptForm.receivedAtUtc = '';
       return;
     }
   }
-
   convertToUtc(localDate: string): string {
     const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     const match = localDate.match(dateRegex);
@@ -261,10 +236,8 @@ export class AppComponent implements OnInit {
   }
 
   formatDateUS(dateString: string): string {
-    console.log(dateString);
     if (!dateString) return '';
     const date = new Date(dateString);
-    console.log(date);
     if (isNaN(date.getTime())) return '';
     const month = String(date.getUTCMonth() + 1).padStart(2, '0');
     const day = String(date.getUTCDate()).padStart(2, '0');
@@ -285,6 +258,51 @@ export class AppComponent implements OnInit {
       return errorMessages.join(', ');
     }
     return error?.error?.title || error?.message || 'An error occurred';
+  }
+
+  limitNumberLength(event: any, maxLength: number): void {
+    const input = event.target;
+    let value = input.value;
+    
+    if (value === '' || value === null || value === undefined) {
+      return;
+    }
+    
+    let valueStr = value.toString().replace(/[^\d.-]/g, '');
+    
+    if (valueStr.length > maxLength) {
+      valueStr = valueStr.substring(0, maxLength);
+      input.value = valueStr;
+      
+      const numValue = parseFloat(valueStr) || 0;
+      
+      if (input.id === 'quantityReceived') {
+        this.receiptForm.quantityReceived = numValue;
+      } else if (input.id === 'unitCost') {
+        this.receiptForm.unitCost = numValue;
+      } else if (input.name && input.name.startsWith('quantity')) {
+        const match = input.name.match(/quantity(\d+)/);
+        if (match) {
+          const index = parseInt(match[1]);
+          if (this.orderForm.lines[index]) {
+            this.orderForm.lines[index].quantity = numValue;
+          }
+        }
+      } else if (input.name && input.name.startsWith('unitPrice')) {
+        const match = input.name.match(/unitPrice(\d+)/);
+        if (match) {
+          const index = parseInt(match[1]);
+          if (this.orderForm.lines[index]) {
+            this.orderForm.lines[index].unitPrice = numValue;
+          }
+        }
+      }
+    }
+  }
+
+  isControlInvalid(form: any, controlName: string): boolean {
+    const control = form.controls[controlName];
+    return control && control.invalid && (control.dirty || control.touched);
   }
 }
 
