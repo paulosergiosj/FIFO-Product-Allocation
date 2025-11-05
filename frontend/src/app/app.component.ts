@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { InventoryReceipt, InventoryReceiptRequest } from '../models/inventory-receipt.model';
 import { OrderRequest, OrderLine, AllocationResult } from '../models/order.model';
@@ -65,7 +65,24 @@ export class AppComponent implements OnInit {
     return Object.keys(this.groupedReceipts).sort();
   }
 
+  isControlInvalid(form: NgForm | null, controlName: string): boolean {
+    if (!form || !form.controls || !form.controls[controlName]) {
+      return false;
+    }
+    const control = form.controls[controlName];
+    return control.invalid && control.touched;
+  }
+
   onReceiptSubmit(form: any): void {
+    if (this.receiptForm.receivedAtUtc) {
+      const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      if (!dateRegex.test(this.receiptForm.receivedAtUtc)) {
+        this.errorMessage = 'Please enter a valid date in MM/DD/YYYY format.';
+        form.controls['receivedAtUtc']?.markAsTouched();
+        return;
+      }
+    }
+
     if (form.invalid) {
       Object.keys(form.controls).forEach(key => {
         form.controls[key].markAsTouched();
@@ -167,18 +184,91 @@ export class AppComponent implements OnInit {
     this.orderResult = null;
   }
 
+  formatDateInput(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    console.log('testtt');
+    
+    // Limita a 8 dígitos (MMDDYYYY)
+    if (value.length > 8) {
+      value = value.substring(0, 8);
+    }
+    
+    // Adiciona barras automaticamente
+    let formatted = value;
+    if (value.length >= 3) {
+      formatted = value.substring(0, 2) + '/' + value.substring(2);
+    }
+    if (value.length >= 5) {
+      formatted = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4);
+    }
+    
+    this.receiptForm.receivedAtUtc = formatted;
+    event.target.value = formatted;
+  }
+
+  validateDate(dateString: string): void {
+    if (!dateString) return;
+    
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const match = dateString.match(dateRegex);
+    
+    if (!match) {
+      // Se não está no formato correto mas tem conteúdo, limpa
+      if (dateString.length === 10) {
+        this.receiptForm.receivedAtUtc = '';
+      }
+      return;
+    }
+    
+    const month = parseInt(match[1], 10);
+    const day = parseInt(match[2], 10);
+    const year = parseInt(match[3], 10);
+    
+    // Valida mês
+    if (month < 1 || month > 12) {
+      this.receiptForm.receivedAtUtc = '';
+      return;
+    }
+    
+    // Valida dia
+    const daysInMonth = new Date(year, month, 0).getDate();
+    if (day < 1 || day > daysInMonth) {
+      this.receiptForm.receivedAtUtc = '';
+      return;
+    }
+    
+    // Valida ano
+    if (year < 1900 || year > 2100) {
+      this.receiptForm.receivedAtUtc = '';
+      return;
+    }
+  }
+
   convertToUtc(localDate: string): string {
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const match = localDate.match(dateRegex);
+    
+    if (match) {
+      const month = parseInt(match[1], 10) - 1;
+      const day = parseInt(match[2], 10);
+      const year = parseInt(match[3], 10);
+      const date = new Date(Date.UTC(year, month, day, 0, 0, 0));
+      return date.toISOString();
+    }
+    
     const date = new Date(localDate + 'T00:00:00');
     return date.toISOString();
   }
 
   formatDateUS(dateString: string): string {
+    console.log(dateString);
     if (!dateString) return '';
     const date = new Date(dateString);
+    console.log(date);
     if (isNaN(date.getTime())) return '';
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const year = date.getUTCFullYear();
     return `${month}/${day}/${year}`;
   }
 
