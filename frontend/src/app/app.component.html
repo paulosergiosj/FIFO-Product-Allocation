@@ -14,10 +14,6 @@
                             <input type="text" class="form-control"
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'sku')"
                                 id="sku" [(ngModel)]="receiptForm.sku" name="sku" maxlength="50" required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(receiptFormRef, 'sku')">
-                                SKU is required.
-                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="quantityReceived" class="form-label">Quantity Received <span
@@ -26,10 +22,6 @@
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'quantityReceived')"
                                 id="quantityReceived" [(ngModel)]="receiptForm.quantityReceived" name="quantityReceived"
                                 min="1" max="2147483647" step="1" (input)="limitIntegerLength($event, 10)" required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(receiptFormRef, 'quantityReceived')">
-                                Quantity Received must be greater than zero.
-                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="unitCost" class="form-label">Unit Cost <span
@@ -38,10 +30,6 @@
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'unitCost')"
                                 id="unitCost" [(ngModel)]="receiptForm.unitCost" name="unitCost" step="0.01" min="0.01"
                                 max="999999999.99" (input)="limitNumberLength($event, 15)" required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(receiptFormRef, 'unitCost')">
-                                Unit Cost must be greater than zero.
-                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="receivedAtUtc" class="form-label">Received At (UTC) <span
@@ -53,10 +41,6 @@
                                 (input)="formatDateInput($event)"
                                 (blur)="validateDate(receiptForm.receivedAtUtc)"
                                 required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(receiptFormRef, 'receivedAtUtc')">
-                                Received date is required. Please use format MM/DD/YYYY.
-                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="warehouseId" class="form-label">Warehouse ID <span
@@ -64,10 +48,6 @@
                             <input type="text" class="form-control"
                                 [class.is-invalid]="isControlInvalid(receiptFormRef, 'warehouseId')"
                                 id="warehouseId" [(ngModel)]="receiptForm.warehouseId" name="warehouseId" maxlength="50" required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(receiptFormRef, 'warehouseId')">
-                                Warehouse ID is required.
-                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary" [disabled]="receiptFormRef.invalid">Add
                             Receipt</button>
@@ -88,10 +68,6 @@
                             <input type="text" class="form-control"
                                 [class.is-invalid]="isControlInvalid(orderFormRef, 'orderId')"
                                 id="orderId" [(ngModel)]="orderForm.orderId" name="orderId" maxlength="50" required>
-                            <div class="invalid-feedback"
-                                *ngIf="isControlInvalid(orderFormRef, 'orderId')">
-                                Order ID is required.
-                            </div>
                         </div>
                         <div id="orderLines">
                             <div class="order-line mb-3 p-3 border rounded"
@@ -108,10 +84,6 @@
                                     <input type="text" class="form-control"
                                         [class.is-invalid]="isControlInvalid(orderFormRef, 'sku' + i)"
                                         [(ngModel)]="line.sku" [name]="'sku' + i" maxlength="50" required>
-                                    <div class="invalid-feedback"
-                                        *ngIf="isControlInvalid(orderFormRef, 'sku' + i)">
-                                        SKU is required.
-                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Quantity <span class="text-danger">*</span></label>
@@ -119,10 +91,6 @@
                                         [class.is-invalid]="isControlInvalid(orderFormRef, 'quantity' + i)"
                                         [(ngModel)]="line.quantity" [name]="'quantity' + i" min="1" max="2147483647"
                                         step="1" (input)="limitIntegerLength($event, 10)" required>
-                                    <div class="invalid-feedback"
-                                        *ngIf="isControlInvalid(orderFormRef, 'quantity' + i)">
-                                        Quantity must be greater than zero.
-                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Unit Price <span class="text-danger">*</span></label>
@@ -130,10 +98,6 @@
                                         [class.is-invalid]="isControlInvalid(orderFormRef, 'unitPrice' + i)"
                                         [(ngModel)]="line.unitPrice" [name]="'unitPrice' + i" step="0.01" min="0"
                                         max="999999999.99" (input)="limitNumberLength($event, 15)" required>
-                                    <div class="invalid-feedback"
-                                        *ngIf="isControlInvalid(orderFormRef, 'unitPrice' + i)">
-                                        Unit Price is required and must be greater than or equal to zero.
-                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Preferred Warehouse ID (optional)</label>
